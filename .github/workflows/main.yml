@@ -1,17 +1,56 @@
-name: Go package
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
 
-on: [push]
+# GitHub recommends pinning actions to a commit SHA.
+# To get a newer version, you will need to update the SHA.
+# You can also reference a tag or branch, but the action may change without warning.
+
+name: Build and Push to GCR
+
+on:
+  schedule:
+    - cron: "20 18 * * *"
+  push:
+    # Publish semver tags as releases.
+    tags: ["v*.*.*"]
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  IMAGE: ${{ github.repository }}
 
 jobs:
-  build:
+  setup-build-publish:
+    name: Setup, Build, and Publish
     runs-on: ubuntu-latest
+    environment: production
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Set up Go
-        uses: actions/setup-go@v3
+      # Setup gcloud CLI
+      - uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
         with:
-          go-version: 1.19
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          project_id: ${{ secrets.GKE_PROJECT }}
 
+      # Configure Docker to use the gcloud command-line tool as a credential
+      # helper for authentication
+      - run: |-
+          gcloud --quiet auth configure-docker
+
+      # Build the Docker image
       - name: Build
-        run: go build -o binary -v ./cmd
+        run: |-
+          docker build \
+            --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
+            --build-arg GITHUB_SHA="$GITHUB_SHA" \
+            --build-arg GITHUB_REF="$GITHUB_REF" \
+            .
+
+      # Push the Docker image to Google Container Registry
+      - name: Publish
+        run: |-
+          docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
