@@ -33,3 +33,7 @@ docker build -t fyfirman-blog-service
 ```
 docker run -p 8080:8080 fyfirman-blog-service 
 ```
+
+## Reference
+
+(DDD)[https://programmingpercy.tech/blog/how-to-domain-driven-design-ddd-golang/]

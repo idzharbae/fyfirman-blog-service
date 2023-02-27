@@ -6,15 +6,11 @@ import (
 	"net/http"
 	"time"
 
+	"fyfirman-blog-service/valueobject"
+
 	"firebase.google.com/go/v4/db"
 	"github.com/gin-gonic/gin"
 )
-
-type Blog struct {
-	Slug      string `json:"slug,omitempty"`
-	CreatedAt string `json:"createdAt,omitempty"`
-	ReadCount int    `json:"readCount,omitempty"`
-}
 
 func setupRouter(client *db.Client) *gin.Engine {
 	// Disable Console Color
@@ -31,7 +27,7 @@ func setupRouter(client *db.Client) *gin.Engine {
 
 		blogRef := client.NewRef("blogs/" + slug)
 
-		var oldBlog Blog
+		var oldBlog valueobject.Blog
 		if err := blogRef.Get(context.Background(), &oldBlog); err != nil {
 			log.Fatalln("Error reading value:", err)
 		}
