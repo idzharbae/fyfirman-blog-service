@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"os"
 
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/db"
@@ -15,8 +16,7 @@ func InitializeFirebase(databaseUrl string) *db.Client {
 	conf := &firebase.Config{
 		DatabaseURL: databaseUrl,
 	}
-
-	opt := option.WithCredentialsFile("serviceAccountKey.json")
+	opt := option.WithCredentialsJSON([]byte(os.Getenv("FIREBASE_CREDENTIALS")))
 
 	app, err := firebase.NewApp(ctx, conf, opt)
 	if err != nil {
