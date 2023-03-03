@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"fyfirman-blog-service/valueobject"
@@ -74,7 +75,8 @@ func setupRouter(client *db.Client) *gin.Engine {
 }
 
 func main() {
-	client := InitializeFirebase()
+	InitializeEnv()
+	client := InitializeFirebase(os.Getenv("FIREBASE_DATABASE_URL"))
 
 	r := setupRouter(client)
 	// Listen and Server in 0.0.0.0:8080

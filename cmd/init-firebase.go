@@ -9,11 +9,11 @@ import (
 	"google.golang.org/api/option"
 )
 
-func InitializeFirebase() *db.Client {
+func InitializeFirebase(databaseUrl string) *db.Client {
 	ctx := context.Background()
 
 	conf := &firebase.Config{
-		DatabaseURL: "https://fyfirman-tech-default-rtdb.asia-southeast1.firebasedatabase.app/",
+		DatabaseURL: databaseUrl,
 	}
 
 	opt := option.WithCredentialsFile("serviceAccountKey.json")
