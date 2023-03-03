@@ -10,6 +10,7 @@ import (
 	"fyfirman-blog-service/valueobject"
 
 	"firebase.google.com/go/v4/db"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -78,6 +79,15 @@ func main() {
 	client := InitializeFirebase(os.Getenv("FIREBASE_DATABASE_URL"))
 
 	r := setupRouter(client)
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{os.Getenv("ALLOWED_ORIGINS")},
+		AllowMethods:     []string{"POST", "PATCH", "GET"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	confServerPort := os.Getenv("SERVER_PORT")
 	if confServerPort == "" {
