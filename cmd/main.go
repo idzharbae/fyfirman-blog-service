@@ -80,14 +80,18 @@ func main() {
 
 	r := setupRouter(client)
 
-	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{os.Getenv("ALLOWED_ORIGINS")},
-		AllowMethods:     []string{"POST", "PATCH", "GET"},
-		AllowHeaders:     []string{"Origin"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-		MaxAge:           12 * time.Hour,
-	}))
+	if os.Getenv("ALLOWED_ORIGINS") == "" {
+		r.Use(cors.Default())
+	} else {
+		r.Use(cors.New(cors.Config{
+			AllowOrigins:     []string{os.Getenv("ALLOWED_ORIGINS")},
+			AllowMethods:     []string{"POST", "PATCH", "GET"},
+			AllowHeaders:     []string{"Origin", "Access-Control-Allow-Origin"},
+			ExposeHeaders:    []string{"Content-Length"},
+			AllowCredentials: true,
+			MaxAge:           12 * time.Hour,
+		}))
+	}
 
 	confServerPort := os.Getenv("SERVER_PORT")
 	if confServerPort == "" {
