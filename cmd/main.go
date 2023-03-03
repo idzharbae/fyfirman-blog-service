@@ -22,6 +22,18 @@ func setupRouter(client *db.Client) *gin.Engine {
 		c.String(http.StatusOK, "pongs")
 	})
 
+	r.GET("/blog/:slug", func(c *gin.Context) {
+		slug := c.Params.ByName("slug")
+
+		blogRef := client.NewRef("blogs/" + slug)
+		var blog valueobject.Blog
+		if err := blogRef.Get(context.Background(), &blog); err != nil {
+			log.Fatalln("Error reading value:", err)
+		}
+
+		c.JSON(http.StatusOK, blog)
+	})
+
 	r.POST("/blog/:slug/read", func(c *gin.Context) {
 		slug := c.Params.ByName("slug")
 
