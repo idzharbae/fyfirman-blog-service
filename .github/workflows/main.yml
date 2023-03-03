@@ -10,8 +10,8 @@
 name: Build and Push to GCR
 
 on:
-  schedule:
-    - cron: "20 18 * * *"
+  # schedule:
+  #   - cron: "20 18 * * *"
   push:
     # Publish semver tags as releases.
     tags: ["v*.*.*"]
