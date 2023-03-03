@@ -24,14 +24,14 @@ gin --appPort 8080 --path ./cmd run main.go
 
 1. Run this command
    
-```
-docker build -t fyfirman-blog-service
+```sh
+docker build -t fyfirman-blog-service .
 ```
 
 2. Run the image with this command
 
-```
-docker run -p 8080:8080 fyfirman-blog-service 
+```sh
+docker run -p 8080:8080 --env-file .env -v $(pwd)/serviceAccountKey.json:/app/serviceAccountKey.json fyfirman-blog-service 
 ```
 
 ## Reference

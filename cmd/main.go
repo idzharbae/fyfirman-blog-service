@@ -75,10 +75,13 @@ func setupRouter(client *db.Client) *gin.Engine {
 }
 
 func main() {
-	InitializeEnv()
 	client := InitializeFirebase(os.Getenv("FIREBASE_DATABASE_URL"))
 
 	r := setupRouter(client)
-	// Listen and Server in 0.0.0.0:8080
-	r.Run(":8080")
+
+	confServerPort := os.Getenv("SERVER_PORT")
+	if confServerPort == "" {
+		log.Fatal("SERVER_PORT config is required")
+	}
+	r.Run(":" + confServerPort)
 }

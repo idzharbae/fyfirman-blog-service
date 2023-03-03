@@ -1,5 +1,4 @@
+.github
 gin-bin
 serviceAccountKey.json
 binary
-.env
-out/
