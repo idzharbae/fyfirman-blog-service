@@ -25,7 +25,7 @@ func Initialize(databaseUrl string) *db.Client {
 		log.Fatalln("error in initializing firebase app: ", err)
 	}
 
-	DB, err := app.Database(ctx)
+	DB, err = app.Database(ctx)
 	if err != nil {
 		log.Fatalln("error in creating firebase DB client: ", err)
 	}
