@@ -3,6 +3,7 @@ package main
 import (
 	blogController "fyfirman-blog-service/cmd/controllers"
 	firebase "fyfirman-blog-service/cmd/repository"
+	github_contribution "fyfirman-blog-service/internal/github_contribution/app"
 	"log"
 	"net/http"
 	"os"
@@ -36,6 +37,8 @@ func main() {
 	// Blog
 	r.GET("/blog/:slug", blogController.FindBlog)
 	r.POST("/blog/:slug/read", blogController.ReadBlog)
+
+	r.GET("/github-contrib", github_contribution.GetGithubContribution)
 
 	confServerPort := os.Getenv("SERVER_PORT")
 	if confServerPort == "" {

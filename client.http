@@ -1,0 +1,9 @@
+@host = http://localhost:3000
+
+###
+GET {{host}}/ping
+Content-Type: application/json
+
+###
+GET {{host}}/github-contrib
+Content-Type: application/json
