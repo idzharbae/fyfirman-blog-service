@@ -4,7 +4,6 @@ import (
 	githubgql "fyfirman-blog-service/internal/github_contribution/infras/github_gql"
 
 	"github.com/pkg/errors"
-	"github.com/shurcooL/githubv4"
 )
 
 type ContributionsCollection struct {
@@ -13,7 +12,7 @@ type ContributionsCollection struct {
 		Weeks              []struct {
 			ContributionDays []struct {
 				ContributionCount int
-				Date              githubv4.DateTime
+				Date              string
 			}
 		}
 	}

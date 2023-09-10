@@ -2,6 +2,7 @@ package app
 
 import (
 	"fyfirman-blog-service/internal/github_contribution/domain"
+	"fyfirman-blog-service/internal/github_contribution/dto"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -22,5 +23,17 @@ func GetGithubContribution(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, contrib)
+	var response dto.GetGithubContributionDTO
+	response.Message = "Data successfully fetched"
+	response.Data = struct {
+		TotalContributions int "json:\"totalContributions\""
+		Weeks              []struct {
+			ContributionDays []struct {
+				ContributionCount int    "json:\"contributionCount\""
+				Date              string "json:\"date\""
+			} "json:\"contributionDays\""
+		} "json:\"weeks\""
+	}(contrib.ContributionCalendar)
+
+	c.JSON(http.StatusOK, response)
 }

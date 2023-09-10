@@ -2,6 +2,7 @@ package githubgql
 
 import (
 	"context"
+	"os"
 
 	"github.com/pkg/errors"
 
@@ -18,7 +19,7 @@ type Response struct {
 				Weeks              []struct {
 					ContributionDays []struct {
 						ContributionCount int
-						Date              githubv4.DateTime
+						Date              string
 					}
 				}
 			}
@@ -27,7 +28,7 @@ type Response struct {
 }
 
 func GetContributionFromGithub(username string) (*Response, error) {
-	token := ""
+	token := os.Getenv("GITHUB_TOKEN")
 
 	src := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
@@ -45,7 +46,7 @@ func GetContributionFromGithub(username string) (*Response, error) {
 					Weeks              []struct {
 						ContributionDays []struct {
 							ContributionCount int
-							Date              githubv4.DateTime
+							Date              string
 						}
 					}
 				}
@@ -56,11 +57,11 @@ func GetContributionFromGithub(username string) (*Response, error) {
 	var response Response
 
 	err := client.Query(context.Background(), &query, map[string]interface{}{
-		"userName": username,
+		"userName": githubv4.String(username),
 	})
 
 	if err != nil {
-		return nil, errors.Wrap(err, "Failed to get contribution to Github")
+		return nil, errors.Wrap(err, "githubgql.GetContributionFromGithub")
 	}
 
 	slog.Info("Fetched. Total Contributions: %d\n", query.User.ContributionsCollection.ContributionCalendar.TotalContributions)
